@@ -49,8 +49,7 @@ int eth_adin2111_unlock(const struct device *dev);
  * @param reg Register address.
  * @param val Value to write.
  *
- * @retval 0 Successful write.
- * @retval <0 Error, a negative errno code.
+ * @return 0 on success, negative errno value on failure.
  */
 int eth_adin2111_reg_write(const struct device *dev, const uint16_t reg, uint32_t val);
 
@@ -63,8 +62,7 @@ int eth_adin2111_reg_write(const struct device *dev, const uint16_t reg, uint32_
  * @param reg Register address.
  * @param[out] val Read value output.
  *
- * @retval 0 Successful write.
- * @retval <0 Error, a negative errno code.
+ * @return 0 on success, negative errno value on failure.
  */
 int eth_adin2111_reg_read(const struct device *dev, const uint16_t reg, uint32_t *val);
 
@@ -78,8 +76,7 @@ int eth_adin2111_reg_read(const struct device *dev, const uint16_t reg, uint32_t
  * @param mask Bitmask for bits that may be modified.
  * @param data Data to apply in the masked range.
  *
- * @retval 0 Successful write.
- * @retval <0 Error, a negative errno code.
+ * @return 0 on success, negative errno value on failure.
  */
 int eth_adin2111_reg_update(const struct device *dev, const uint16_t reg,
 			    uint32_t mask, uint32_t data);
@@ -93,8 +90,7 @@ int eth_adin2111_reg_update(const struct device *dev, const uint16_t reg,
  * @note The caller is responsible for device lock.
  *       Shall not be called from ISR.
  *
- * @retval 0 Successful write.
- * @retval <0 Error, a negative errno code.
+ * @return 0 on success, negative errno value on failure.
  */
 int eth_adin2111_sw_reset(const struct device *dev, uint16_t delay);
 
@@ -107,8 +103,7 @@ int eth_adin2111_sw_reset(const struct device *dev, uint16_t delay);
  *
  * @param[in] dev ADIN2111 device.
  *
- * @retval 0 Successful write.
- * @retval <0 Error, a negative errno code.
+ * @return 0 on success, negative errno value on failure.
  */
 int eth_adin2111_mac_reset(const struct device *dev);
 
@@ -122,8 +117,7 @@ int eth_adin2111_mac_reset(const struct device *dev);
  * @param[in] dev ADIN2111 device.
  * @param enable Set to 0 to disable and to nonzero to enable.
  *
- * @retval 0 Successful write.
- * @retval <0 Error, a negative errno code.
+ * @return 0 on success, negative errno value on failure.
  */
 int eth_adin2111_broadcast_filter(const struct device *dev, bool enable);
 

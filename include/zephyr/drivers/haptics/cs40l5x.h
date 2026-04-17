@@ -332,10 +332,9 @@ struct cs40l5x_data {
  *
  * @param dev Pointer to the device structure for haptic device instance
  *
- * @retval 0 if success
+ * @return 0 on success, negative errno value on failure.
  * @retval -EAGAIN if ReDC or F0 estimation times out
  * @retval -EIO if a control port transaction fails
- * @retval -errno another error code on failure, resulting from PM action callback
  */
 int cs40l5x_calibrate(const struct device *const dev);
 
@@ -350,9 +349,8 @@ int cs40l5x_calibrate(const struct device *const dev);
  * @param level Amplitude of haptic effect, where UINT8_MAX is 100% (default: 0x1B)
  * @param duration Playback duration in milliseconds, where 0 is infinite duration (default: 0x32)
  *
- * @retval 0 if success
+ * @return 0 on success, negative errno value on failure.
  * @retval -EIO if a control port transaction fails
- * @retval -errno another error code on failure, resulting from PM action callback
  */
 int cs40l5x_configure_buzz(const struct device *const dev, const uint32_t frequency,
 			   const uint8_t level, const uint32_t duration);
@@ -367,10 +365,9 @@ int cs40l5x_configure_buzz(const struct device *const dev, const uint32_t freque
  * @param attenuation Attenuation in dB for desired haptic effect, see @ref cs40l5x_attenuation
  * @param edge Specify edge (rising or falling) to trigger haptic effects
  *
- * @retval 0 if success
+ * @return 0 on success, negative errno value on failure.
  * @retval -EINVAL if invalid wavetable source and index provided (e.g., index out of bounds)
  * @retval -EIO if a control port transaction fails
- * @retval -errno another error code on failure, resulting from PM action callback
  */
 int cs40l5x_configure_trigger(const struct device *const dev, const struct gpio_dt_spec *const gpio,
 			      const enum cs40l5x_bank bank, const uint8_t index,
@@ -387,7 +384,6 @@ int cs40l5x_configure_trigger(const struct device *const dev, const struct gpio_
  * @retval 0 if logging is disabled
  * @retval -EINVAL if invalid wavetable source or trigger GPIO provided
  * @retval -EIO if a control port transaction fails
- * @retval -errno another error code on failure, resulting from PM action callback
  */
 int cs40l5x_logger(const struct device *const dev, enum cs40l5x_logger logger_state);
 
@@ -399,9 +395,8 @@ int cs40l5x_logger(const struct device *const dev, enum cs40l5x_logger logger_st
  * @param value Unsigned 32-bit integer to store the retrieved data
  * @param type See @ref cs40l5x_logger_source_type
  *
- * @retval 0 if success
+ * @return 0 on success, negative errno value on failure.
  * @retval -EIO if a control port transaction fails
- * @retval -errno another error code on failure, resulting from PM action callback
  */
 int cs40l5x_logger_get(const struct device *const dev, enum cs40l5x_logger_source source,
 		       enum cs40l5x_logger_source_type type, uint32_t *const value);
@@ -413,8 +408,8 @@ int cs40l5x_logger_get(const struct device *const dev, enum cs40l5x_logger_sourc
  * @param bank Wavetable source for desired haptic effect, see @ref cs40l5x_bank
  * @param index Wavetable index for desired haptic effect
  *
- * @retval 0 if success
- * @retval -EINVAL if invalid wavetable source and index provided (e.g., index out of bounds)
+ * @retval 0 on success.
+ * @retval -EINVAL Invalid wavetable source and index provided (e.g., index out of bounds).
  */
 int cs40l5x_select_output(const struct device *const dev, const enum cs40l5x_bank bank,
 			  const uint8_t index);
@@ -425,10 +420,9 @@ int cs40l5x_select_output(const struct device *const dev, const enum cs40l5x_ban
  * @param dev Pointer to the device structure for haptic device instance
  * @param gain Gain setting (valid values between 0 and 100)
  *
- * @retval 0 if success
+ * @return 0 on success, negative errno value on failure.
  * @retval -EINVAL if provided gain is greater than 100%
  * @retval -EIO if a control port transaction fails
- * @retval -errno another error code on failure, resulting from PM action callback
  */
 int cs40l5x_set_gain(const struct device *const dev, const uint8_t gain);
 
@@ -442,10 +436,9 @@ int cs40l5x_set_gain(const struct device *const dev, const uint8_t gain);
  * @param samples Array of signed 8-bit PCM samples
  * @param num_samples Number of PCM samples
  *
- * @retval 0 if success
+ * @return 0 on success, negative errno value on failure.
  * @retval -EINVAL if invalid index provided (e.g., index out of bounds)
  * @retval -EIO if a control port transaction fails
- * @retval -errno another error code on failure, resulting from PM action callback
  */
 int cs40l5x_upload_pcm(const struct device *const dev, const enum cs40l5x_custom_index index,
 		       const uint16_t redc, const uint16_t f0, const int8_t *const samples,
@@ -459,10 +452,9 @@ int cs40l5x_upload_pcm(const struct device *const dev, const enum cs40l5x_custom
  * @param sections Array of @ref cs40l5x_pwle_section
  * @param num_sections Number of PWLE sections
  *
- * @retval 0 if success
+ * @return 0 on success, negative errno value on failure.
  * @retval -EINVAL if invalid index provided (e.g., index out of bounds)
  * @retval -EIO if a control port transaction fails
- * @retval -errno another error code on failure, resulting from PM action callback
  */
 int cs40l5x_upload_pwle(const struct device *const dev, const enum cs40l5x_custom_index index,
 			const struct cs40l5x_pwle_section *const sections,

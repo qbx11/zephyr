@@ -282,7 +282,7 @@ __subsystem struct i2c_target_driver_api {
  * @param config the configuration structure associated with the
  * device to which the operation is addressed.
  *
- * @return 0 if the write is accepted, or a negative error code.
+ * @return 0 if the write is accepted, negative errno value on failure.
  */
 typedef int (*i2c_target_write_requested_cb_t)(
 		struct i2c_target_config *config);
@@ -302,8 +302,7 @@ typedef int (*i2c_target_write_requested_cb_t)(
  *
  * @param val the byte received by the controller.
  *
- * @return 0 if more data can be accepted, or a negative error
- * code.
+ * @return 0 if more data can be accepted, negative errno value on failure.
  */
 typedef int (*i2c_target_write_received_cb_t)(
 		struct i2c_target_config *config, uint8_t val);
@@ -325,7 +324,7 @@ typedef int (*i2c_target_write_received_cb_t)(
  * @param val pointer to storage for the first byte of data to return
  * for the read request.
  *
- * @return 0 if more data can be requested, or a negative error code.
+ * @return 0 if more data can be requested, negative errno value on failure.
  */
 typedef int (*i2c_target_read_requested_cb_t)(
 		struct i2c_target_config *config, uint8_t *val);
@@ -347,7 +346,7 @@ typedef int (*i2c_target_read_requested_cb_t)(
  * @param val pointer to storage for the next byte of data to return
  * for the read request.
  *
- * @return 0 if data has been provided, or a negative error code.
+ * @return 0 if data has been provided, negative errno value on failure.
  */
 typedef int (*i2c_target_read_processed_cb_t)(
 		struct i2c_target_config *config, uint8_t *val);
@@ -389,7 +388,7 @@ typedef void (*i2c_target_buf_write_received_cb_t)(
  * @param len pointer to storage for the length of the data to be transferred
  * for the read request.
  *
- * @return 0 if data has been provided, or a negative error code.
+ * @return 0 if data has been provided, negative errno value on failure.
  */
 typedef int (*i2c_target_buf_read_requested_cb_t)(
 		struct i2c_target_config *config, uint8_t **ptr, uint32_t *len);
@@ -771,7 +770,7 @@ static inline void i2c_xfer_stats(const struct device *dev, struct i2c_msg *msgs
  * @param dev_config Bit-packed 32-bit value to the device runtime configuration
  * for the I2C controller.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error, failed to configure device.
  */
 __syscall int i2c_configure(const struct device *dev, uint32_t dev_config);
@@ -819,10 +818,10 @@ static inline int i2c_configure_dt(const struct i2c_dt_spec *spec,
  * @param dev_config Pointer to return bit-packed 32-bit value of
  * the I2C controller configuration.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  * @retval -ERANGE Configured I2C frequency is invalid.
- * @retval -ENOSYS If get config is not implemented
+ * @retval -ENOSYS Get config is not implemented.
  */
 __syscall int i2c_get_config(const struct device *dev, uint32_t *dev_config);
 
@@ -865,7 +864,7 @@ static inline int z_impl_i2c_get_config(const struct device *dev, uint32_t *dev_
  * @param num_msgs Number of messages to transfer.
  * @param addr Address of the I2C target device.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  */
 __syscall int i2c_transfer(const struct device *dev,
@@ -917,10 +916,10 @@ static inline int z_impl_i2c_transfer(const struct device *dev,
  * @param cb Function pointer for completion callback.
  * @param userdata Userdata passed to callback.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
- * @retval -ENOSYS If transfer async is not implemented
- * @retval -EWOULDBLOCK If the device is temporarily busy doing another transfer
+ * @retval -ENOSYS Transfer async is not implemented.
+ * @retval -EWOULDBLOCK Device is temporarily busy doing another transfer.
  */
 static inline int i2c_transfer_cb(const struct device *dev,
 				  struct i2c_msg *msgs,
@@ -992,8 +991,7 @@ static inline int i2c_transfer_cb_dt(const struct i2c_dt_spec *spec,
  * @param cb Function pointer for completion callback.
  * @param userdata Userdata passed to callback.
  *
- * @retval 0 if successful
- * @retval <0 negative on error.
+ * @return 0 on success, negative errno value on failure.
  */
 static inline int i2c_write_read_cb(const struct device *dev, struct i2c_msg *msgs,
 				 uint8_t num_msgs, uint16_t addr, const void *write_buf,
@@ -1067,10 +1065,10 @@ void z_i2c_transfer_signal_cb(const struct device *dev, int result, void *userda
  * @param addr Address of the I2C target device.
  * @param sig Signal to notify of transfer completion.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
- * @retval -ENOSYS If transfer async is not implemented
- * @retval -EWOULDBLOCK If the device is temporarily busy doing another transfer
+ * @retval -ENOSYS Transfer async is not implemented.
+ * @retval -EWOULDBLOCK Device is temporarily busy doing another transfer.
  */
 static inline int i2c_transfer_signal(const struct device *dev,
 				 struct i2c_msg *msgs,
@@ -1406,7 +1404,7 @@ static inline int z_impl_i2c_target_driver_unregister(const struct device *dev)
  * @param num_bytes Number of bytes to write.
  * @param addr Address to the target I2C device for writing.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  */
 static inline int i2c_write(const struct device *dev, const uint8_t *buf,
@@ -1451,7 +1449,7 @@ static inline int i2c_write_dt(const struct i2c_dt_spec *spec,
  * @param num_bytes Number of bytes to read.
  * @param addr Address of the I2C device being read.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  */
 static inline int i2c_read(const struct device *dev, uint8_t *buf,
@@ -1500,8 +1498,7 @@ static inline int i2c_read_dt(const struct i2c_dt_spec *spec,
  * @param read_buf Pointer to storage for read data
  * @param num_read Number of bytes to read
  *
- * @retval 0 if successful
- * @retval negative on error.
+ * @return 0 on success, negative errno value on failure.
  */
 static inline int i2c_write_read(const struct device *dev, uint16_t addr,
 				 const void *write_buf, size_t num_write,
@@ -1561,7 +1558,7 @@ static inline int i2c_write_read_dt(const struct i2c_dt_spec *spec,
  * @param buf Memory pool that stores the retrieved data.
  * @param num_bytes Number of bytes being read.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  */
 static inline int i2c_burst_read(const struct device *dev,
@@ -1616,7 +1613,7 @@ static inline int i2c_burst_read_dt(const struct i2c_dt_spec *spec,
  * @param buf Memory pool from which the data is transferred.
  * @param num_bytes Number of bytes being written.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  */
 static inline int i2c_burst_write(const struct device *dev,
@@ -1673,7 +1670,7 @@ static inline int i2c_burst_write_dt(const struct i2c_dt_spec *spec,
  * @param reg_addr Address of the internal register being read.
  * @param value Memory pool that stores the retrieved register value.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  */
 static inline int i2c_reg_read_byte(const struct device *dev,
@@ -1719,7 +1716,7 @@ static inline int i2c_reg_read_byte_dt(const struct i2c_dt_spec *spec,
  * @param reg_addr Address of the internal register being written.
  * @param value Value to be written to internal register.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  */
 static inline int i2c_reg_write_byte(const struct device *dev,
@@ -1766,7 +1763,7 @@ static inline int i2c_reg_write_byte_dt(const struct i2c_dt_spec *spec,
  * @param mask Bitmask for updating internal register.
  * @param value Value for updating internal register.
  *
- * @retval 0 If successful.
+ * @retval 0 on success.
  * @retval -EIO General input / output error.
  */
 static inline int i2c_reg_update_byte(const struct device *dev,

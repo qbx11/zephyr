@@ -631,9 +631,8 @@ __subsystem struct pwm_driver_api {
  * @param pulse Pulse width (in clock cycles) set to the PWM. HW specific.
  * @param flags Flags for pin configuration.
  *
- * @retval 0 If successful.
- * @retval -EINVAL If pulse > period.
- * @retval -errno Negative errno code on failure.
+ * @return 0 on success, negative errno value on failure.
+ * @retval -EINVAL Pulse width exceeds period.
  */
 __syscall int pwm_set_cycles(const struct device *dev, uint32_t channel,
 			     uint32_t period, uint32_t pulse,
@@ -661,8 +660,7 @@ static inline int z_impl_pwm_set_cycles(const struct device *dev,
  * @param[out] cycles Pointer to the memory to store clock rate (cycles per
  *                    sec). HW specific.
  *
- * @retval 0 If successful.
- * @retval -errno Negative errno code on failure.
+ * @return 0 on success, negative errno value on failure.
  */
 __syscall int pwm_get_cycles_per_sec(const struct device *dev, uint32_t channel,
 				     uint64_t *cycles);
@@ -689,9 +687,8 @@ static inline int z_impl_pwm_get_cycles_per_sec(const struct device *dev,
  * @param pulse Pulse width (in nanoseconds) set to the PWM.
  * @param flags Flags for pin configuration (polarity).
  *
- * @retval 0 If successful.
- * @retval -ENOTSUP If requested period or pulse cycles are not supported.
- * @retval -errno Other negative errno code on failure.
+ * @return 0 on success, negative errno value on failure.
+ * @retval -ENOTSUP Requested period or pulse cycles are not supported.
  */
 static inline int pwm_set(const struct device *dev, uint32_t channel,
 			  uint32_t period, uint32_t pulse, pwm_flags_t flags)
@@ -775,9 +772,8 @@ static inline int pwm_set_pulse_dt(const struct pwm_dt_spec *spec,
  * @param cycles Cycles to be converted.
  * @param[out] usec Pointer to the memory to store calculated usec.
  *
- * @retval 0 If successful.
- * @retval -ERANGE If result is too large.
- * @retval -errno Other negative errno code on failure.
+ * @return 0 on success, negative errno value on failure.
+ * @retval -ERANGE Result is too large.
  */
 static inline int pwm_cycles_to_usec(const struct device *dev, uint32_t channel,
 				     uint32_t cycles, uint64_t *usec)
@@ -808,9 +804,8 @@ static inline int pwm_cycles_to_usec(const struct device *dev, uint32_t channel,
  * @param cycles Cycles to be converted.
  * @param[out] nsec Pointer to the memory to store the calculated nsec.
  *
- * @retval 0 If successful.
- * @retval -ERANGE If result is too large.
- * @retval -errno Other negative errno code on failure.
+ * @return 0 on success, negative errno value on failure.
+ * @retval -ERANGE Result is too large.
  */
 static inline int pwm_cycles_to_nsec(const struct device *dev, uint32_t channel,
 				     uint32_t cycles, uint64_t *nsec)
@@ -890,11 +885,11 @@ static inline int pwm_configure_capture(const struct device *dev,
  * @param[in] dev PWM device instance.
  * @param channel PWM channel.
  *
- * @retval 0 If successful.
- * @retval -EINVAL if invalid function parameters were given
- * @retval -ENOSYS if PWM capture is not supported
- * @retval -EIO if IO error occurred while enabling PWM capture
- * @retval -EBUSY if PWM capture is already in progress
+ * @return 0 on success.
+ * @retval -EINVAL Invalid function parameters were given.
+ * @retval -ENOSYS PWM capture is not supported.
+ * @retval -EIO IO error occurred while enabling PWM capture.
+ * @retval -EBUSY PWM capture is already in progress.
  */
 __syscall int pwm_enable_capture(const struct device *dev, uint32_t channel);
 
@@ -921,10 +916,10 @@ static inline int z_impl_pwm_enable_capture(const struct device *dev,
  * @param[in] dev PWM device instance.
  * @param channel PWM channel.
  *
- * @retval 0 If successful.
- * @retval -EINVAL if invalid function parameters were given
- * @retval -ENOSYS if PWM capture is not supported
- * @retval -EIO if IO error occurred while disabling PWM capture
+ * @return 0 on success.
+ * @retval -EINVAL Invalid function parameters were given.
+ * @retval -ENOSYS PWM capture is not supported.
+ * @retval -EIO IO error occurred while disabling PWM capture.
  */
 __syscall int pwm_disable_capture(const struct device *dev, uint32_t channel);
 
@@ -951,10 +946,10 @@ static inline int z_impl_pwm_disable_capture(const struct device *dev,
  *
  * @kconfig_dep{CONFIG_PWM_WITH_DMA}
  *
- * @retval 0 If successful.
- * @retval -EINVAL if invalid function parameters were given
- * @retval -ENOSYS if DMA for PWM is not supported
- * @retval -ENOTSUP if the PWM channel does not support DMA
+ * @return 0 on success.
+ * @retval -EINVAL Invalid function parameters were given.
+ * @retval -ENOSYS DMA for PWM is not supported.
+ * @retval -ENOTSUP PWM channel does not support DMA.
  */
 __syscall int pwm_enable_dma(const struct device *dev, uint32_t channel);
 
@@ -979,10 +974,10 @@ static inline int z_impl_pwm_enable_dma(const struct device *dev, uint32_t chann
  *
  * @kconfig_dep{CONFIG_PWM_WITH_DMA}
  *
- * @retval 0 If successful.
- * @retval -EINVAL if invalid function parameters were given
- * @retval -ENOSYS if DMA for PWM is not supported
- * @retval -ENOTSUP if the PWM channel does not support DMA
+ * @return 0 on success.
+ * @retval -EINVAL Invalid function parameters were given.
+ * @retval -ENOSYS DMA for PWM is not supported.
+ * @retval -ENOTSUP PWM channel does not support DMA.
  */
 __syscall int pwm_disable_dma(const struct device *dev, uint32_t channel);
 
@@ -1019,11 +1014,11 @@ static inline int z_impl_pwm_disable_dma(const struct device *dev, uint32_t chan
  *                   (in clock cycles). HW specific.
  * @param timeout Waiting period for the capture to complete.
  *
- * @retval 0 If successful.
+ * @return 0 on success.
  * @retval -EBUSY PWM capture already in progress.
  * @retval -EAGAIN Waiting period timed out.
  * @retval -EIO IO error while capturing.
- * @retval -ERANGE If result is too large.
+ * @retval -ERANGE Result is too large.
  */
 __syscall int pwm_capture_cycles(const struct device *dev, uint32_t channel,
 				 pwm_flags_t flags, uint32_t *period,
@@ -1049,12 +1044,11 @@ __syscall int pwm_capture_cycles(const struct device *dev, uint32_t channel,
  *                   (in usec).
  * @param timeout Waiting period for the capture to complete.
  *
- * @retval 0 If successful.
+ * @return 0 on success, negative errno value on failure.
  * @retval -EBUSY PWM capture already in progress.
  * @retval -EAGAIN Waiting period timed out.
  * @retval -EIO IO error while capturing.
- * @retval -ERANGE If result is too large.
- * @retval -errno Other negative errno code on failure.
+ * @retval -ERANGE Result is too large.
  */
 static inline int pwm_capture_usec(const struct device *dev, uint32_t channel,
 				   pwm_flags_t flags, uint64_t *period,
@@ -1103,12 +1097,11 @@ static inline int pwm_capture_usec(const struct device *dev, uint32_t channel,
  *                   (in nsec).
  * @param timeout Waiting period for the capture to complete.
  *
- * @retval 0 If successful.
+ * @return 0 on success, negative errno value on failure.
  * @retval -EBUSY PWM capture already in progress.
  * @retval -EAGAIN Waiting period timed out.
  * @retval -EIO IO error while capturing.
- * @retval -ERANGE If result is too large.
- * @retval -errno Other negative errno code on failure.
+ * @retval -ERANGE Result is too large.
  */
 static inline int pwm_capture_nsec(const struct device *dev, uint32_t channel,
 				   pwm_flags_t flags, uint64_t *period,
